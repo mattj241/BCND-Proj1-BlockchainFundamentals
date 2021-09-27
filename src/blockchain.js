@@ -66,8 +66,6 @@ class Blockchain {
         let self = this;
         return new Promise(async (resolve, reject) => {
             try {
-                //tempBlock = new BlockClass.Block()
-                //console.log(block.getBData());
                 if (self.height > -1)
                 {
                     let lastBlock = self.chain[self.chain.length-1];

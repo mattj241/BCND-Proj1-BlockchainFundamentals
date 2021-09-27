@@ -146,16 +146,16 @@ class BlockchainController {
     injectErrorIncorrectPrevHash() {
         this.app.patch("/prevHash/:block_height/:new_hash", async (req, res) => {
             if(req.params.block_height && req.params.new_hash) {
-                //try {
+                try {
                     let error = await this.blockchain.injectErrorPrevHash(req.params.block_height, req.params.new_hash);
                     if(error){
                         return res.status(200).json(error);
                     } else {
                         return res.status(404).send("Block Not Found!");
                     }
-                //} catch (error) {
+                } catch (error) {
                    return res.status(500).send("An error happened!");
-                //}
+                }
             } else {
                 return res.status(500).send("Check the Body Parameters!");
             }
@@ -167,16 +167,16 @@ class BlockchainController {
     injectErrorIncorrectCurrentHash() {
         this.app.patch("/currentHash/:block_height/:new_hash", async (req, res) => {
             if(req.params.block_height && req.params.new_hash) {
-                //try {
+                try {
                     let error = await this.blockchain.injectErrorCurrentHash(req.params.block_height, req.params.new_hash);
                     if(error){
                         return res.status(200).json(error);
                     } else {
                         return res.status(404).send("Block Not Found!");
                     }
-                //} catch (error) {
+                } catch (error) {
                    return res.status(500).send("An error happened!");
-                //}
+                }
             } else {
                 return res.status(500).send("Check the Body Parameters!");
             }

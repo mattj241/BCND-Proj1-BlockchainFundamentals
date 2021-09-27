@@ -17,6 +17,9 @@ class BlockchainController {
         this.submitStar();
         this.getBlockByHash();
         this.getStarsByOwner();
+        this.validateChain();
+        this.injectErrorIncorrectPrevHash();
+        this.injectErrorIncorrectCurrentHash();
     }
 
     // Enpoint to Get a Block by Height (GET Endpoint)
@@ -109,10 +112,73 @@ class BlockchainController {
                         return res.status(404).send("Block Not Found!");
                     }
                 } catch (error) {
-                    return res.status(500).send("An error happened!");
+                   return res.status(500).send("An error happened!");
                 }
             } else {
                 return res.status(500).send("Block Not Found! Review the Parameters!");
+            }
+            
+        });
+    }
+
+    // This endpoint allows you validate the chain of star blocks
+    validateChain() {
+        this.app.get("/validateChain", async (req, res) => {
+            if(req) {
+                try {
+                    let errors = await this.blockchain.validateChain();
+                    if(errors){
+                        return res.status(200).json(errors);
+                    } else {
+                        return res.status(404).send("Block Not Found!");
+                    }
+                } catch (error) {
+                   return res.status(500).send("An error happened!");
+                }
+            } else {
+                return res.status(500).send("Check the Body Parameters!");
+            }
+            
+        });
+    }
+
+    // This endpoint allows you invalidate a block by modifying the previous hash value
+    injectErrorIncorrectPrevHash() {
+        this.app.patch("/prevHash/:block_height/:new_hash", async (req, res) => {
+            if(req.params.block_height && req.params.new_hash) {
+                //try {
+                    let error = await this.blockchain.injectErrorPrevHash(req.params.block_height, req.params.new_hash);
+                    if(error){
+                        return res.status(200).json(error);
+                    } else {
+                        return res.status(404).send("Block Not Found!");
+                    }
+                //} catch (error) {
+                   return res.status(500).send("An error happened!");
+                //}
+            } else {
+                return res.status(500).send("Check the Body Parameters!");
+            }
+            
+        });
+    }
+
+    // This endpoint allows you invalidate a block by modifying its current hash value
+    injectErrorIncorrectCurrentHash() {
+        this.app.patch("/currentHash/:block_height/:new_hash", async (req, res) => {
+            if(req.params.block_height && req.params.new_hash) {
+                //try {
+                    let error = await this.blockchain.injectErrorCurrentHash(req.params.block_height, req.params.new_hash);
+                    if(error){
+                        return res.status(200).json(error);
+                    } else {
+                        return res.status(404).send("Block Not Found!");
+                    }
+                //} catch (error) {
+                   return res.status(500).send("An error happened!");
+                //}
+            } else {
+                return res.status(500).send("Check the Body Parameters!");
             }
             
         });
